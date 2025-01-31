@@ -60,7 +60,7 @@ export const resolvers = {
                 throw new GraphQLError("telefono ya usado");
             }
             const url =
-                `https://api.api-ninjas.com/v1/validatephone?number=${phone}`;
+                `https://api.api-ninjas.com/v1/validatephone?number=${telefono}`;
             const data = await fetch(url, {
                 Headers: {
                     "X-Api-Key": API_KEY,
