@@ -1,6 +1,6 @@
 import type { RestaurantModel } from "./types.ts";
 import { Collection, ObjectId } from "mongodb";
-import { APIPhone, APIWeather } from "./types.ts";
+import { APIPhone } from "./types.ts";
 import { GraphQLError } from "graphql";
 import { graphql } from "graphql";
 
@@ -66,9 +66,9 @@ export const resolvers = {
                     "X-Api-Key": API_KEY,
                 },
             });
-            if (data.status !== 200) {
+            /*if (data.status !== 200) {
                 throw new GraphQLError("error al acceder a la data de la api");
-            }
+            }*/
             const response: APIPhone = await data.json();
             if (response.is_valid === false) {
                 throw new GraphQLError("el telefono introducido es incorrecto");
