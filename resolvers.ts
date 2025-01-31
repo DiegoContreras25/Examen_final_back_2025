@@ -59,9 +59,28 @@ export const resolvers = {
             if (existsPhone >= 1) {
                 throw new GraphQLError("telefono ya usado");
             }
+            const url =
+                `https://api.api-ninjas.com/v1/validatephone?number=${telefono}`;
+            const data = await fetch(url, {
+                Headers: {
+                    "X-Api-Key": API_KEY,
+                },
+            });
+            if (data.status !== 200) {
+                throw new GraphQLError("error al acceder a la data de la api");
+            }
+            const response: APIPhone = await data.json();
+            if (response.is_valid === false) {
+                throw new GraphQLError("el telefono introducido es incorrecto");
+            }
+            const country = response.country;
+            const timezone = response.timezones[0];
+
+            const { insertedId } = await contexto.coleccionRestaurantes
+                .insertOne({ nombre, direccion, ciudad, telefono });
 
             return {
-                //_id: insertedId,
+                _id: insertedId,
                 nombre,
                 direccion,
                 ciudad,
@@ -102,39 +121,3 @@ export const resolvers = {
 };
 
 //https://api.api-ninjas.com/v1/worldtime?timezone=${parent.timezone}
-/*
-
-const url =
-                `https://api.api-ninjas.com/v1/validatephone?number=${telefono}`;
-            const data = await fetch(url, {
-                Headers: {
-                    "X-Api-Key": API_KEY,
-                },
-            });
-            if (data.status !== 200) {
-                throw new GraphQLError("error al acceder a la data de la api");
-            }
-            const response: APIPhone = await data.json();
-            if (response.is_valid === false) {
-                throw new GraphQLError("el telefono introducido es incorrecto");
-            }
-            const country = response.country;
-            const timezone = response.timezones[0];
-
-            const { insertedId } = await contexto.coleccionRestaurantes
-                .insertOne({ nombre, direccion, ciudad, telefono });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                */
